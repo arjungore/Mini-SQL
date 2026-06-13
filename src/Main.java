@@ -1,7 +1,7 @@
 import engine.DatabaseEngine;
-import java.util.Arrays;
 import java.util.Scanner;
-import model.Table;
+import parser.ParsedCommand;
+import parser.SQLParser;
 
 public class Main {
 
@@ -9,6 +9,8 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
+
+        SQLParser parser = new SQLParser();
         DatabaseEngine db = new DatabaseEngine();
 
         System.out.println("Welcome to MiniSQL");
@@ -19,31 +21,39 @@ public class Main {
 
             String query = sc.nextLine();
 
-            if(query.equalsIgnoreCase("exit")) {
+            if (query.equalsIgnoreCase("exit")) {
                 break;
             }
 
-            if(query.equalsIgnoreCase("create table students")) {
+            ParsedCommand cmd = parser.parse(query);
 
-                db.createTable("students");
-            }
+            switch(cmd.getType()) {
+                case CREATE_TABLE:
+                    db.createTable(cmd.getTableName());
+                    break;
+                case INSERT:
+                    db.insertRow(
+                            cmd.getTableName(),
+                            cmd.getValues());
+                    break;
+                case SELECT:
 
-            else if(query.equalsIgnoreCase("insert into students")) {
+                    if(cmd.hasWhereClause()) {
 
-                Table table = db.getTable("students");
+                        db.selectWhere(
+                                cmd.getTableName(),
+                                cmd.getWhereColumn(),
+                                cmd.getWhereValue());
 
-                table.insertRow(Arrays.asList("1", "Arjun"));
-            }
+                    } else {
 
-            else if(query.equalsIgnoreCase("select * from students")) {
+                        db.selectAll(
+                                cmd.getTableName());
+                    }
 
-                Table table = db.getTable("students");
-
-                table.displayRows();
-            }
-
-            else {
-                System.out.println("Unknown command");
+                    break;
+                default:
+                    System.out.println("Unsupported command");
             }
         }
 

@@ -30,6 +30,70 @@ public class Table {
         }
     }
 
+    public void displayRowsWhere(int columnIndex, String matchValue) {
+        boolean foundMatch = false;
+        
+        for(List<String> row : rows) {
+            if(columnIndex < row.size()) {
+                String cellValue = row.get(columnIndex);
+                
+                if(cellValue.equals(matchValue)) {
+                    for(String value : row) {
+                        System.out.print(value + " ");
+                    }
+                    System.out.println();
+                    foundMatch = true;
+                }
+            }
+        }
+        
+        if(!foundMatch) {
+            System.out.println("No rows match the condition.");
+        }
+    }
+
+    public void updateRowWhere(int updateColumnIndex, String newValue, int whereColumnIndex, String whereValue) {
+        boolean foundMatch = false;
+        
+        for(List<String> row : rows) {
+            if(whereColumnIndex < row.size()) {
+                String cellValue = row.get(whereColumnIndex);
+                
+                if(cellValue.equals(whereValue)) {
+                    if(updateColumnIndex < row.size()) {
+                        row.set(updateColumnIndex, newValue);
+                        foundMatch = true;
+                    }
+                }
+            }
+        }
+        
+        if(!foundMatch) {
+            System.out.println("No rows match the condition.");
+        }
+    }
+
+    public void deleteRowWhere(int whereColumnIndex, String whereValue) {
+        boolean foundMatch = false;
+        
+        for(int i = 0; i < rows.size(); i++) {
+            List<String> row = rows.get(i);
+            if(whereColumnIndex < row.size()) {
+                String cellValue = row.get(whereColumnIndex);
+                
+                if(cellValue.equals(whereValue)) {
+                    rows.remove(i);
+                    foundMatch = true;
+                    i--;
+                }
+            }
+        }
+        
+        if(!foundMatch) {
+            System.out.println("No rows match the condition.");
+        }
+    }
+
     public String getName() {
         return name;
     }
