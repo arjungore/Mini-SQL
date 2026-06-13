@@ -4,13 +4,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import model.Table;
+import storage.StorageEngine;
 
 public class DatabaseEngine {
 
     private Map<String, Table> tables;
+    private StorageEngine storageEngine;
 
-    public DatabaseEngine() {
+    public DatabaseEngine(String dataDirectory) {
         tables = new HashMap<>();
+        storageEngine = new StorageEngine(dataDirectory);
+    }
+
+    public void loadTablesFromDisk() {
+        storageEngine.loadAllTables(tables);
     }
 
     public void createTable(String tableName) {
@@ -18,7 +25,9 @@ public class DatabaseEngine {
             System.out.println("Table already exists!");
             return;
         }
-        tables.put(tableName, new Table(tableName));
+        Table table = new Table(tableName);
+        tables.put(tableName, table);
+        storageEngine.saveTable(table);
         System.out.println("Table created: " + tableName);
     }
 
@@ -33,6 +42,7 @@ public class DatabaseEngine {
             return;
         }
         table.insertRow(Arrays.asList(values));
+        storageEngine.saveTable(table);
         System.out.println("Row inserted successfully");
     }
 
@@ -83,6 +93,7 @@ public class DatabaseEngine {
         }
 
         table.updateRowWhere(setColumnIndex, newValue, whereColumnIndex, whereValue);
+        storageEngine.saveTable(table);
         System.out.println("Row updated successfully");
     }
 
@@ -101,6 +112,7 @@ public class DatabaseEngine {
         }
 
         table.deleteRowWhere(whereColumnIndex, whereValue);
+        storageEngine.saveTable(table);
         System.out.println("Row deleted successfully");
     }
 
