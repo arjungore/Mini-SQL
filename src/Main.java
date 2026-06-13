@@ -1,6 +1,5 @@
 import engine.DatabaseEngine;
 import java.util.Scanner;
-import parser.CommandType;
 import parser.ParsedCommand;
 import parser.SQLParser;
 
@@ -26,6 +25,14 @@ public class Main {
 
             if (query.equalsIgnoreCase("exit")) {
                 break;
+            }
+
+            // Handle multi-line UPDATE commands
+            if(query.trim().toUpperCase().startsWith("UPDATE")) {
+                while(!query.toUpperCase().contains("WHERE")) {
+                    System.out.print("         > ");
+                    query += " " + sc.nextLine();
+                }
             }
 
             ParsedCommand cmd = parser.parse(query);
