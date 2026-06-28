@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.MainController" styleClass="app-root">
+    <top>
+        <VBox>
+            <MenuBar styleClass="app-menubar">
+                <menus>
+                    <Menu text="File">
+                        <items>
+                            <MenuItem text="New Database" onAction="#handleNewDatabase" />
+                            <MenuItem text="New Table" onAction="#handleNewTable" />
+                            <SeparatorMenuItem />
+                            <MenuItem text="Exit" onAction="#handleExit" />
+                        </items>
+                    </Menu>
+                    <Menu text="Database">
+                        <items>
+                            <MenuItem text="Refresh Explorer" onAction="#refreshExplorer" />
+                            <MenuItem text="New Database" onAction="#handleNewDatabase" />
+                            <MenuItem text="New Table" onAction="#handleNewTable" />
+                        </items>
+                    </Menu>
+                    <Menu text="Query">
+                        <items>
+                            <MenuItem text="Execute" onAction="#handleExecute" />
+                            <MenuItem text="Clear Query" onAction="#handleClearQuery" />
+                            <MenuItem text="Clear Results" onAction="#handleClearResults" />
+                        </items>
+                    </Menu>
+                    <Menu text="Tools">
+                        <items>
+                            <MenuItem text="Refresh" onAction="#refreshExplorer" />
+                            <MenuItem text="Export" onAction="#handleExport" />
+                            <MenuItem text="Toggle Theme" onAction="#handleToggleTheme" />
+                        </items>
+                    </Menu>
+                    <Menu text="Help">
+                        <items>
+                            <MenuItem text="About" onAction="#handleAbout" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+
+            <ToolBar styleClass="app-toolbar">
+                <items>
+                    <Button text="New Database" onAction="#handleNewDatabase" styleClass="toolbar-button" />
+                    <Button text="New Table" onAction="#handleNewTable" styleClass="toolbar-button" />
+                    <Button text="Open SQL" onAction="#handleOpenSqlFile" styleClass="toolbar-button" />
+                    <Button text="Save SQL" onAction="#handleSaveSqlFile" styleClass="toolbar-button" />
+                    <Separator orientation="VERTICAL" />
+                    <Button fx:id="executeButton" text="Execute" onAction="#handleExecute" styleClass="toolbar-button primary" />
+                    <Button text="Clear Query" onAction="#handleClearQuery" styleClass="toolbar-button" />
+                    <Button text="Clear Results" onAction="#handleClearResults" styleClass="toolbar-button" />
+                    <Button text="Copy Selected Rows" onAction="#handleCopySelectedRows" styleClass="toolbar-button" />
+                    <Button text="Refresh" onAction="#refreshExplorer" styleClass="toolbar-button" />
+                    <Separator orientation="VERTICAL" />
+                    <Button text="Export CSV" onAction="#handleExportCSV" styleClass="toolbar-button" />
+                    <Button text="Export JSON" onAction="#handleExportJSON" styleClass="toolbar-button" />
+                    <Button text="Import CSV" onAction="#handleImportCSV" styleClass="toolbar-button" />
+                    <Separator orientation="VERTICAL" />
+                    <Button text="Toggle Theme" onAction="#handleToggleTheme" styleClass="toolbar-button" />
+                </items>
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" prefWidth="280" styleClass="side-panel">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12" />
+            </padding>
+            <Label text="Database Explorer" styleClass="panel-title" />
+            <TreeView fx:id="explorerTree" VBox.vgrow="ALWAYS" styleClass="explorer-tree" />
+        </VBox>
+    </left>
+
+    <center>
+        <SplitPane orientation="VERTICAL" dividerPositions="0.44" styleClass="main-split-pane">
+            <items>
+                <VBox spacing="10" styleClass="editor-panel">
+                    <padding>
+                        <Insets top="12" right="12" bottom="12" left="12" />
+                    </padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="SQL Editor" styleClass="panel-title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="historyComboBox" promptText="Query History" prefWidth="240" onAction="#handleHistorySelection" />
+                        <Label text="Ctrl+Enter executes" styleClass="hint-text" />
+                    </HBox>
+                    <TextArea fx:id="queryArea" promptText="Type SQL here or open a file..." VBox.vgrow="ALWAYS" styleClass="sql-editor" wrapText="false" onKeyPressed="#handleEditorKeyPressed" />
+                </VBox>
+                <VBox spacing="10" styleClass="results-panel">
+                    <padding>
+                        <Insets top="12" right="12" bottom="12" left="12" />
+                    </padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Results" styleClass="panel-title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="rowsInfoLabel" text="0 rows" styleClass="hint-text" />
+                        <ProgressIndicator fx:id="loadingIndicator" prefWidth="18" prefHeight="18" />
+                    </HBox>
+                    <TableView fx:id="resultsTable" VBox.vgrow="ALWAYS" styleClass="results-table" />
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="status-bar">
+            <padding>
+                <Insets top="8" right="12" bottom="8" left="12" />
+            </padding>
+            <Label text="Status:" styleClass="status-prefix" />
+            <Label fx:id="statusLabel" text="Ready" styleClass="status-value" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="currentDatabaseLabel" text="Current DB: default" styleClass="status-meta" />
+            <Label fx:id="executionTimeLabel" text="Execution: 0 ms" styleClass="status-meta" />
+        </HBox>
+    </bottom>
+</BorderPane>
